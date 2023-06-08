@@ -14,7 +14,7 @@ void shader::Bind() { glUseProgram(m_RendererID); }
 
 void shader::Unbind() { glUseProgram(0); }
 
-unsigned int shader::GetUniformsLocation(const std::string& name) {
+int shader::GetUniformsLocation(const std::string& name) {
   if (m_uniform_color_location_cache.find(name) !=
       m_uniform_color_location_cache.end())
     return m_uniform_color_location_cache[name];
@@ -25,6 +25,11 @@ unsigned int shader::GetUniformsLocation(const std::string& name) {
   m_uniform_color_location_cache[name] = color_location;
   return color_location;
 }
+
+void shader::SetUniform1i(const std::string& name, int value){
+	glUniform1i(GetUniformsLocation(name), value);
+}
+
 
 void shader::SetUniform4f(const std::string& name, float v0, float v1, float v2,
                           float v3) {

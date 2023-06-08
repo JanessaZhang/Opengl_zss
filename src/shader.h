@@ -19,7 +19,7 @@ class shader {
   std::string m_filepath;
   std::unordered_map<std::string,int> m_uniform_color_location_cache;
 
-  unsigned int GetUniformsLocation(const std::string& name);
+  int GetUniformsLocation(const std::string& name);
   shader_program_source parse_shader(const std::string& file_path);
   unsigned int compile_shader(unsigned int type, const std::string& source);
   unsigned int create_shader(const std::string& vertex_shader,
@@ -32,6 +32,7 @@ class shader {
   void Bind();
   void Unbind();
   // set uniforms
+  void SetUniform1i(const std::string& name, int value);
   void SetUniform4f(const std::string& name, float v0, float v1, float v2,
                    float v3);
 };

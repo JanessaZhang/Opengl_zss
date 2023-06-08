@@ -8,6 +8,7 @@
                 "-fdiagnostics-color=always",
                 "-g",
 				"${fileDirname}/src/*.cpp",
+				"${fileDirname}/src/vendor/stb_image/*.cpp",
 				"${fileDirname}/main.cpp",
                 // "${file}",
 			

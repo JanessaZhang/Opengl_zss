@@ -68,7 +68,7 @@ int main() {
         unsigned int indices[] = {0, 1, 2, 2, 3, 0};
 
 		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 
         vertexarray va;
         vertexbuffer vb(positions, sizeof(float) * 4 * 4);

@@ -1,4 +1,5 @@
 #include "shader.h"
+#include <glad/glad.h>
 
 shader::shader(const std::string& filepath)
     : m_filepath(filepath), m_RendererID(0) {

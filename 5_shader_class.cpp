@@ -59,8 +59,7 @@ int main() {
     mshader.Unbind();
     vb.unbind();
     ib.unbind();
-    
-	renderer mrenderer;
+    // glUseProgram(0);
 
     //动态颜色
     float r = 0.1, increment = 0.05;
@@ -68,17 +67,21 @@ int main() {
     // loop
     while (!glfwWindowShouldClose(window)) {
       // 清除buffer 并设置背景颜色
-      mrenderer.Clear();
+      glClear(GL_COLOR_BUFFER_BIT);
+      glClearColor(0.25, 0.75, 0.25, 1.0);
 
       // 进行绘制
       mshader.Bind();
       mshader.SetUniform4f("u_color", r, 0.3, 0.5, 1.0);
+      va.Bind();
+      ib.bind();
+
       if (r < 0.0) increment = 0.05;
       if (r > 1.0) increment = -0.05;
       r += increment;
 
       //有索引缓冲区
-	  mrenderer.Draw(va,ib,mshader);
+      glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
       // 交换buffer，进行显示
       glfwSwapBuffers(window);

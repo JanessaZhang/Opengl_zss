@@ -20,7 +20,6 @@
 #include "src/vertexbufferlayout.h"
 #include "vector"
 #include "src/tests/TestClearColor.h"
-#include "src/tests/TestTexture2D.h"
 
 int main() {
     // glfw init
@@ -66,7 +65,6 @@ int main() {
 		test::TestMenu* testmenu=new test::TestMenu(currentTest);
 		currentTest=testmenu;
 		testmenu->RegisterTest<test::TestClearColor>("Clear Color");
-		testmenu->RegisterTest<test::TestTexture2D>("Texture 2D");
 
 		// test::TestClearColor test;
 

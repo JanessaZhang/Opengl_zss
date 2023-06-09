@@ -1,3 +1,6 @@
+#ifndef TEXTUIRE_HEADER_H
+#define TEXTUIRE_HEADER_H
+
 #include "renderer.h"
 
 class texture {
@@ -18,3 +21,5 @@ public:
     inline int getheight() const { return m_height; }
     inline int getBPP() const { return m_BPP; }
 };
+
+#endif

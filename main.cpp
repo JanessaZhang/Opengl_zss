@@ -45,22 +45,38 @@ int main() {
 
     {
         // 数据 索引
-        float positions[] = {-0.5f,
-                             -0.5f,
+		float positions[] = {100.0f,
+                             100.0f,
                              0.0,
                              0.0,
-                             0.5f,
-                             -0.5f,
+                             200.0f,
+                             100.0f,
                              1.0,
                              0.0,
-                             0.5f,
-                             0.5f,
+                             200.0f,
+                             200.0f,
                              1.0,
                              1.0,
-                             -0.5f,
-                             0.5f,
+                             100.0f,
+                             200.0f,
                              0.0,
                              1.0};
+        // float positions[] = {-10.5f,
+        //                      -10.5f,
+        //                      0.0,
+        //                      0.0,
+        //                      10.5f,
+        //                      -10.5f,
+        //                      1.0,
+        //                      0.0,
+        //                      10.5f,
+        //                      10.5f,
+        //                      1.0,
+        //                      1.0,
+        //                      -10.5f,
+        //                      10.5f,
+        //                      0.0,
+        //                      1.0};
 		// float positions[] = {-0.5f,
         //                      -0.5f,
         //                      0.5f,
@@ -84,7 +100,7 @@ int main() {
         va.AddBuffer(vb, layout);
         indexbuffer ib(indices, 6);
 
-		glm::mat4 proj=glm::ortho(-2.0,2.0,-1.5,1.5);
+		glm::mat4 proj=glm::ortho(0.0,640.0,0.0,480.0,-1.0,1.0);
 
         shader mshader("res/shader/basic.shader");
         mshader.Bind();

@@ -9,6 +9,7 @@
                 "-g",
 				"${fileDirname}/src/*.cpp",
 				"${fileDirname}/src/vendor/stb_image/*.cpp",
+				"${fileDirname}/src/vendor/imgui/*.cpp",
 				"${fileDirname}/main.cpp",
                 // "${file}",
 			

@@ -18,7 +18,6 @@
 #include "src/vertexarray.h"
 #include "src/vertexbuffer.h"
 #include "src/vertexbufferlayout.h"
-#include "vector"
 
 int main() {
     // glfw init
@@ -48,20 +47,20 @@ int main() {
 
     {
         // 数据 索引
-        float positions[] = {-50.0f,
-                             -50.0f,
+        float positions[] = {100.0f,
+                             100.0f,
                              0.0,
                              0.0,
-                             50.0f,
-                             -50.0f,
+                             200.0f,
+                             100.0f,
                              1.0,
                              0.0,
-                             50.0f,
-                             50.0f,
+                             200.0f,
+                             200.0f,
                              1.0,
                              1.0,
-                             -50.0f,
-                             50.0f,
+                             100.0f,
+                             200.0f,
                              0.0,
                              1.0};
         // float positions[] = {-10.5f,
@@ -105,7 +104,7 @@ int main() {
         glm::mat4 proj =
             glm::ortho(0.0, 960.0, 0.0, 540.0, -1.0, 1.0);  //投影矩阵
         glm::mat4 view =
-            glm::translate(glm::mat4(1.0), glm::vec3(0, 0, 0));  //视图矩阵
+            glm::translate(glm::mat4(1.0), glm::vec3(-100, 0, 0));  //视图矩阵
         
         shader mshader("res/shader/basic.shader");
         mshader.Bind();
@@ -130,12 +129,7 @@ int main() {
         const char* glsl_version = "#version 330";
         ImGui_ImplOpenGL3_Init(glsl_version);
 
-		 glm::vec3 translationA(200, 200, 0);
-		 glm::vec3 translationB(400, 200, 0);
-		//  std::vector<glm::vec3> transArray{translationA,translationB,glm::vec3(500,500,0)};
-		 std::vector<glm::vec3> transArray{translationA,translationB};
-
-		 
+		 glm::vec3 translation(200, 200, 0);
 
         //动态颜色
         float r = 0.1, increment = 0.05;
@@ -149,67 +143,39 @@ int main() {
             ImGui_ImplGlfw_NewFrame();
             ImGui::NewFrame();
 
+			glm::mat4 modele =
+            glm::translate(glm::mat4(1.0),translation);  //模型矩阵
+       		glm::mat4 mvp = proj * view * modele;
+
             // 进行绘制
             mshader.Bind();
+            mshader.SetUniform4f("u_color", r, 0.3, 0.5, 1.0);
+            if (r < 0.0)
+                increment = 0.05;
+            if (r > 1.0)
+                increment = -0.05;
+            r += increment;
 
-			for(int i=0;i<transArray.size();i++)
-			{
-				glm::mat4 modele =
-            	glm::translate(glm::mat4(1.0),transArray[i]);  //模型矩阵
-       			glm::mat4 mvp = proj * view * modele;
-	        	mshader.SetUniformMat4f("u_MVP", mvp);
-            	mrenderer.Draw(va, ib, mshader);
+	        mshader.SetUniformMat4f("u_MVP", mvp);
 
-				{
-					ImGui::SliderFloat3(
-						"Translation:"+(char)('0' + i),
-						&transArray[i].x,
-						0.0f,
-						960.0f);  // Edit 1 float using a slider from 0.0f to 1.0f
 
-            	}
+            {
+                ImGui::SliderFloat3(
+                    "Translation",
+                    &translation.x,
+                    0.0f,
+                    960.0f);  // Edit 1 float using a slider from 0.0f to 1.0f
+
                 ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
-                            -500.0f / ImGui::GetIO().Framerate,
+                            1000.0f / ImGui::GetIO().Framerate,
                             ImGui::GetIO().Framerate);
-			}
-
-
-			// {
-			// 	glm::mat4 modele =
-            // 	glm::translate(glm::mat4(1.0),translationA);  //模型矩阵
-       		// 	glm::mat4 mvp = proj * view * modele;
-	        // 	mshader.SetUniformMat4f("u_MVP", mvp);
-            // 	mrenderer.Draw(va, ib, mshader);
-			// }
-
-			// {
-			// 	glm::mat4 modele =
-            // 	glm::translate(glm::mat4(1.0),translationB);  //模型矩阵
-       		// 	glm::mat4 mvp = proj * view * modele;
-	        // 	mshader.SetUniformMat4f("u_MVP", mvp);
-            // 	mrenderer.Draw(va, ib, mshader);
-			// }
-
-            // {
-            //     ImGui::SliderFloat3(
-            //         "Translation A",
-            //         &translationA.x,
-            //         0.0f,
-            //         960.0f);  // Edit 1 float using a slider from 0.0f to 1.0f
-
-			// 	ImGui::SliderFloat3(
-            //         "Translation B",
-            //         &translationB.x,
-            //         0.0f,
-            //         960.0f);  // Edit 1 float using a slider from 0.0f to 1.0f
-
-            //     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
-            //                 -500.0f / ImGui::GetIO().Framerate,
-            //                 ImGui::GetIO().Framerate);
-            // }
+            }
 
             ImGui::Render();
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+            //有索引缓冲区
+            mrenderer.Draw(va, ib, mshader);
 
             // 交换buffer，进行显示
             glfwSwapBuffers(window);

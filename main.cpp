@@ -27,7 +27,7 @@ int main() {
 
     //创建window
     GLFWwindow* window =
-        glfwCreateWindow(640, 480, "first window", NULL, NULL);
+        glfwCreateWindow(960, 540, "first window", NULL, NULL);
     if (!window) {
         glfwTerminate();
         return -1;
@@ -100,12 +100,16 @@ int main() {
         va.AddBuffer(vb, layout);
         indexbuffer ib(indices, 6);
 
-		glm::mat4 proj=glm::ortho(0.0,640.0,0.0,480.0,-1.0,1.0);
+		glm::mat4 proj=glm::ortho(0.0,960.0,0.0,540.0,-1.0,1.0);//投影矩阵
+		glm::mat4 view=glm::translate(glm::mat4(1.0),glm::vec3(-100,0,0));//视图矩阵
+		glm::mat4 modele=glm::translate(glm::mat4(1.0),glm::vec3(200,200,0));//模型矩阵
+
+		glm::mat4 mvp=proj*view*modele;
 
         shader mshader("res/shader/basic.shader");
         mshader.Bind();
         mshader.SetUniform4f("u_color", 0.2, 0.3, 0.5, 1.0);
-		mshader.SetUniformMat4f("u_MVP",proj);
+		mshader.SetUniformMat4f("u_MVP",mvp);
 
         texture mtexture("res/shader/2.png");
         mtexture.Bind();

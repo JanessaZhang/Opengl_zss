@@ -3,8 +3,8 @@
 
 #include <glad/glad.h>
 #include "vertexarray.h"
-#include"indexbuffer.h"
-#include"shader.h"
+#include "indexbuffer.h"
+#include "shader.h"
 
 
 #define ASSERT(x) if(!(x) __debugbreak());

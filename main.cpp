@@ -19,6 +19,7 @@
 #include "src/vertexbuffer.h"
 #include "src/vertexbufferlayout.h"
 #include "vector"
+#include "src/tests/TestClearColor.h"
 
 int main() {
     // glfw init
@@ -47,78 +48,8 @@ int main() {
     }
 
     {
-        // 数据 索引
-        float positions[] = {-50.0f,
-                             -50.0f,
-                             0.0,
-                             0.0,
-                             50.0f,
-                             -50.0f,
-                             1.0,
-                             0.0,
-                             50.0f,
-                             50.0f,
-                             1.0,
-                             1.0,
-                             -50.0f,
-                             50.0f,
-                             0.0,
-                             1.0};
-        // float positions[] = {-10.5f,
-        //                      -10.5f,
-        //                      0.0,
-        //                      0.0,
-        //                      10.5f,
-        //                      -10.5f,
-        //                      1.0,
-        //                      0.0,
-        //                      10.5f,
-        //                      10.5f,
-        //                      1.0,
-        //                      1.0,
-        //                      -10.5f,
-        //                      10.5f,
-        //                      0.0,
-        //                      1.0};
-        // float positions[] = {-0.5f,
-        //                      -0.5f,
-        //                      0.5f,
-        //                      -0.5f,
-        //                      0.5f,
-        //                      0.5f,
-        //                      -0.5f,
-        //                      0.5f};
-        unsigned int indices[] = {0, 1, 2, 2, 3, 0};
-
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-        vertexarray va;
-        vertexbuffer vb(positions, sizeof(float) * 4 * 4);
-        vertexbufferlayout layout;
-        layout.Push<float>(2);
-        layout.Push<float>(2);
-
-        va.AddBuffer(vb, layout);
-        indexbuffer ib(indices, 6);
-
-        glm::mat4 proj =
-            glm::ortho(0.0, 960.0, 0.0, 540.0, -1.0, 1.0);  //投影矩阵
-        glm::mat4 view =
-            glm::translate(glm::mat4(1.0), glm::vec3(0, 0, 0));  //视图矩阵
-        
-        shader mshader("res/shader/basic.shader");
-        mshader.Bind();
-        mshader.SetUniform4f("u_color", 0.2, 0.3, 0.5, 1.0);
-
-        texture mtexture("res/shader/2.png");
-        mtexture.Bind();
-        mshader.SetUniform1i("u_Texture", 0);
-
-        va.Unbind();
-        mshader.Unbind();
-        vb.unbind();
-        ib.unbind();
 
         renderer mrenderer;
 
@@ -130,83 +61,39 @@ int main() {
         const char* glsl_version = "#version 330";
         ImGui_ImplOpenGL3_Init(glsl_version);
 
-		 glm::vec3 translationA(200, 200, 0);
-		 glm::vec3 translationB(400, 200, 0);
-		//  std::vector<glm::vec3> transArray{translationA,translationB,glm::vec3(500,500,0)};
-		 std::vector<glm::vec3> transArray{translationA,translationB};
+		test::Test* currentTest=nullptr;
+		test::TestMenu* testmenu=new test::TestMenu(currentTest);
+		currentTest=testmenu;
+		testmenu->RegisterTest<test::TestClearColor>("Clear Color");
 
-		 
+		// test::TestClearColor test;
 
-        //动态颜色
-        float r = 0.1, increment = 0.05;
-
-        // loop
         while (!glfwWindowShouldClose(window)) {
-            // 清除buffer 并设置背景颜色
             mrenderer.Clear();
 
-            ImGui_ImplOpenGL3_NewFrame();
+			ImGui_ImplOpenGL3_NewFrame();
             ImGui_ImplGlfw_NewFrame();
             ImGui::NewFrame();
+			
+			// test.OnUpdata(0.0);
+			// test.OnRenderer();
 
-            // 进行绘制
-            mshader.Bind();
-
-			for(int i=0;i<transArray.size();i++)
+			if(currentTest)
 			{
-				glm::mat4 modele =
-            	glm::translate(glm::mat4(1.0),transArray[i]);  //模型矩阵
-       			glm::mat4 mvp = proj * view * modele;
-	        	mshader.SetUniformMat4f("u_MVP", mvp);
-            	mrenderer.Draw(va, ib, mshader);
+				currentTest->OnUpdata(0.0);
+				currentTest->OnRenderer();
+				ImGui::Begin("Test");
 
+				if(currentTest!=testmenu&&ImGui::Button("<-"))
 				{
-					ImGui::SliderFloat3(
-						"Translation:"+(char)('0' + i),
-						&transArray[i].x,
-						0.0f,
-						960.0f);  // Edit 1 float using a slider from 0.0f to 1.0f
-
-            	}
-                ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
-                            -500.0f / ImGui::GetIO().Framerate,
-                            ImGui::GetIO().Framerate);
+					delete currentTest;
+					currentTest=testmenu;
+				}
+				currentTest->OnImGuiRenderer();
+				ImGui::End();
 			}
 
-
-			// {
-			// 	glm::mat4 modele =
-            // 	glm::translate(glm::mat4(1.0),translationA);  //模型矩阵
-       		// 	glm::mat4 mvp = proj * view * modele;
-	        // 	mshader.SetUniformMat4f("u_MVP", mvp);
-            // 	mrenderer.Draw(va, ib, mshader);
-			// }
-
-			// {
-			// 	glm::mat4 modele =
-            // 	glm::translate(glm::mat4(1.0),translationB);  //模型矩阵
-       		// 	glm::mat4 mvp = proj * view * modele;
-	        // 	mshader.SetUniformMat4f("u_MVP", mvp);
-            // 	mrenderer.Draw(va, ib, mshader);
-			// }
-
-            // {
-            //     ImGui::SliderFloat3(
-            //         "Translation A",
-            //         &translationA.x,
-            //         0.0f,
-            //         960.0f);  // Edit 1 float using a slider from 0.0f to 1.0f
-
-			// 	ImGui::SliderFloat3(
-            //         "Translation B",
-            //         &translationB.x,
-            //         0.0f,
-            //         960.0f);  // Edit 1 float using a slider from 0.0f to 1.0f
-
-            //     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
-            //                 -500.0f / ImGui::GetIO().Framerate,
-            //                 ImGui::GetIO().Framerate);
-            // }
+			// test.OnImGuiRenderer();
 
             ImGui::Render();
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -216,7 +103,9 @@ int main() {
             // 分发事件
             glfwPollEvents();
         }
+	delete currentTest;
     }
+
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
     //终止窗口

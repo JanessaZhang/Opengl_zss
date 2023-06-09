@@ -12,6 +12,10 @@
 #include "src/vertexarray.h"
 #include "src/vertexbuffer.h"
 #include "src/vertexbufferlayout.h"
+
+#include "src/vendor/glm/glm.hpp"
+#include "src/vendor/glm/gtc/matrix_transform.hpp"
+
 int main() {
     // glfw init
     if (!glfwInit()) {
@@ -23,7 +27,7 @@ int main() {
 
     //创建window
     GLFWwindow* window =
-        glfwCreateWindow(1000, 1000, "first window", NULL, NULL);
+        glfwCreateWindow(640, 480, "first window", NULL, NULL);
     if (!window) {
         glfwTerminate();
         return -1;
@@ -69,6 +73,7 @@ int main() {
 
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+		
 
         vertexarray va;
         vertexbuffer vb(positions, sizeof(float) * 4 * 4);
@@ -79,9 +84,12 @@ int main() {
         va.AddBuffer(vb, layout);
         indexbuffer ib(indices, 6);
 
+		glm::mat4 proj=glm::ortho(-2.0,2.0,-1.5,1.5);
+
         shader mshader("res/shader/basic.shader");
         mshader.Bind();
         mshader.SetUniform4f("u_color", 0.2, 0.3, 0.5, 1.0);
+		mshader.SetUniformMat4f("u_MVP",proj);
 
         texture mtexture("res/shader/2.png");
         mtexture.Bind();

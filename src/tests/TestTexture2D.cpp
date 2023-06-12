@@ -44,7 +44,8 @@ m_View(glm::translate(glm::mat4(1.0), glm::vec3(0, 0, 0)))
 
     m_shader=std::make_unique<shader>("res/shader/basic.shader");
     m_shader->Bind();
-    m_shader->SetUniform4f("u_color", 0.2, 0.3, 0.5, 1.0);
+	glm::vec4 vec4_v(0.2, 0.3, 0.5, 1.0);
+    m_shader->SetUniform4f("u_color", vec4_v);
 
 	m_Texture=std::make_unique<texture>("res/shader/2.png");
     m_shader->SetUniform1i("u_Texture", 0);
@@ -66,7 +67,7 @@ void TestTexture2D::OnRenderer()  //äÖÈ¾
             glm::translate(glm::mat4(1.0), m_TranslationA);  //????
         glm::mat4 mvp = m_Proj * m_View * modele;
 		m_shader->Bind();
-        m_shader->SetUniformMat4f("u_MVP", mvp);
+        m_shader->SetUniformMat4("u_MVP", mvp);
         mrenderer.Draw(*m_VAO, *m_IndexBuffer, *m_shader);
     }
 
@@ -74,7 +75,7 @@ void TestTexture2D::OnRenderer()  //äÖÈ¾
         glm::mat4 modele =
             glm::translate(glm::mat4(1.0), m_TranslationB);  //????
         glm::mat4 mvp = m_Proj * m_View * modele;
-        m_shader->SetUniformMat4f("u_MVP", mvp);
+        m_shader->SetUniformMat4("u_MVP", mvp);
         mrenderer.Draw(*m_VAO, *m_IndexBuffer, *m_shader);
     }
 }

@@ -17,7 +17,7 @@ class shader {
 private:
     unsigned int m_RendererID;
     std::string m_filepath;
-    std::unordered_map<std::string, int> m_uniform_color_location_cache;
+    std::unordered_map<std::string, int> m_uniform_location_cache;
 
     int GetUniformsLocation(const std::string& name);
     shader_program_source parse_shader(const std::string& file_path);
@@ -31,12 +31,16 @@ public:
 
     void Bind();
     void Unbind();
+
     // set uniforms
     void SetUniform1i(const std::string& name, int value);
-    void SetUniform4f(const std::string& name, float v0, float v1, float v2,
-                      float v3);
+    void SetUniform1f(const std::string& name, float value);
+    void SetUniform2f(const std::string& name, glm::vec2& value);
+    void SetUniform3f(const std::string& name, glm::vec3& value);
+    void SetUniform4f(const std::string& name, glm::vec4& value);
 
-    void SetUniformMat4f(const std::string& name, const glm::mat4& mat4);
+    void SetUniformMat3(const std::string& name, const glm::mat3& mat4);
+    void SetUniformMat4(const std::string& name, const glm::mat4& mat4);
 };
 
 #endif
